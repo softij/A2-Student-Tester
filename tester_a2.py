@@ -126,7 +126,7 @@ if test_3_flag_1:
             print("""error in test 3-1: /upload operation should return 
                     {
                         "success": "true",
-                        "key": [test_1]
+                        "key": "test_1"
                     }""")
             print("your response: ")
             print(jsonResponse)
@@ -209,5 +209,81 @@ if test_4_flag:
         print("")
 
 
+# test 5: configure cache settings
 print("--------------------------------------------------------------------")
-print("tester total: {}/5".format(score))    
+print("test 5: configure the cache (manual mode)")  
+
+test_5_flag_1 = True
+try:
+    response = requests.post(url+'/configure_cache', data={'mode': 'manual', 'numNodes': 2, 'cacheSize': 3, 'policy': 'RR'})
+except:
+    print("error in test 5: could not post /configure_cache to your web app")
+    print("check the web app connection, IP, port, API endpoint path, etc.")
+    test_5_flag_1 = False 
+
+if test_5_flag_1:
+    try: 
+        jsonResponse = response.json()
+    except:
+        print("error in test 5: your response cannot be represented in JSON format.")
+
+    try:
+        if jsonResponse["success"] == "true" and jsonResponse["mode"] == "manual" 
+        and jsonResponse["numNodes"] == 2 and jsonResponse["cacheSize"] == 3
+        and jsonResponse["policy"] == "RR" :
+            score += 1
+        else:
+
+            print("""error in test 5: /configure_cache operation should return 
+                    {
+                        "success": "true",
+                        "mode": "manual",
+                        "numNodes": 2,
+                        "cacheSize": 3,
+                        "policy": "RR"
+                    }""")
+            print("your response: ")
+            print(jsonResponse)
+            print("")
+    except:
+        print("error in test 5: access failure on ["success"]/["mode"]/["numNodes"]/["cacheSize"]/["policy"] of the post response.")
+        print("")
+    
+    
+
+# test 6: get number of nodes
+print("--------------------------------------------------------------------")
+print("test 6: get number of nodes")  
+
+
+test_6_flag_1 = True
+try:
+    response = requests.post(url+'/getNumNodes')
+except:
+    print("error in test 6: could not post /getNumNodes to your web app")
+    print("check the web app connection, IP, port, API endpoint path, etc.")
+    test_6_flag_1 = False 
+
+if test_6_flag_1:
+    try: 
+        jsonResponse = response.json()
+    except:
+        print("error in test 6: your response cannot be represented in JSON format.")     
+    try:
+        if jsonResponse["success"] == "true" and jsonResponse["numNodes"] == 2:
+            score += 1
+        else:
+            print("""error in test 6: /getNumNodes operation should return 
+                {
+                    "success": "true",
+                    "numNodes": 2
+                }""")
+            print("your response: ")
+            print(jsonResponse)
+            print("")
+    except:
+        print("error in test 6: access failure on ["success"]/["numNodes"] of the post response.")
+        print("")
+       
+print("--------------------------------------------------------------------")
+print("tester total: {}/7".format(score))    
