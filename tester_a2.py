@@ -1,13 +1,16 @@
 import argparse
-import requests 
+import requests
 import os
+
 
 def isgoodipv4(s):
     digs_only = s.replace('http://', '')
     pieces = digs_only.split('.')
     if len(pieces) != 4: return False
-    try: return all(0<=int(p)<256 for p in pieces)
-    except ValueError: return False
+    try:
+        return all(0 <= int(p) < 256 for p in pieces)
+    except ValueError:
+        return False
 
 
 parser = argparse.ArgumentParser()
@@ -29,13 +32,12 @@ url = args.ip_addr + ':5000/api'
 print("tester will be run on: {}".format(url))
 score = 0
 
-
 # test 1: delete_all
 print("--------------------------------------------------------------------")
 print("test 1: delete all keys & values from the application")
 test_1_flag = True
 try:
-    response = requests.post(url+"/delete_all")
+    response = requests.post(url + "/delete_all")
 except:
     print("error in test 1: could not post /delete_all to your web app")
     print("check the web app connection, IP, port, API endpoint path, etc.")
@@ -44,36 +46,35 @@ except:
 if test_1_flag:
     try:
         jsonResponse = response.json()
-    except: 
+    except:
         print("error in test 1: your response cannot be represented in JSON format")
     try:
         if jsonResponse["success"] == "true":
             score += 1
-        else: 
+        else:
             print('error in test 1: /delete_all operation should return {"success": "true"}')
             print("your response: ")
             print(jsonResponse)
             print("")
-    except: 
+    except:
         print('error in test 1: access failure on ["success"] of the post response')
         print("")
 
-
-# test 2: list_keys 
+# test 2: list_keys
 print("--------------------------------------------------------------------")
 print("test 2: list_keys without any upload")
 test_2_flag = True
 try:
-    response = requests.post(url+"/list_keys")
+    response = requests.post(url + "/list_keys")
 except:
     print("error in test 2: could not post /list_keys to your web app")
     print("check the web app connection, IP, port, API endpoint path, etc.")
-    test_2_flag = False 
+    test_2_flag = False
 
 if test_2_flag:
     try:
         jsonResponse = response.json()
-    except: 
+    except:
         print("error in test 2: your response cannot be represented in JSON format")
 
     try:
@@ -88,32 +89,31 @@ if test_2_flag:
             print("your response: ")
             print(jsonResponse)
             print("")
-    except: 
-        print('error in test 2: access failure on ["success"]/["key"] of the post response') 
+    except:
+        print('error in test 2: access failure on ["success"]/["key"] of the post response')
         print("")
-    
 
 # test 3: upload
 print("--------------------------------------------------------------------")
-print("test 3: upload 2 images")   
+print("test 3: upload 2 images")
 filenames = ['1.jpeg', '2.png']
 work_dir = os.path.abspath(os.getcwd())
 
-try: 
-    file_1 = {'file': open(work_dir+'/images/'+filenames[0],'rb')}
+try:
+    file_1 = {'file': open(work_dir + '/images/' + filenames[0], 'rb')}
 except:
     print("script failure: unable to open the image file. Please contact TA at wenjun.qiu@mail.utoronto.ca")
 
 test_3_flag_1 = True
 try:
-    response = requests.post(url+"/upload", files=file_1, data={'key': 'test_1'})
+    response = requests.post(url + "/upload", files=file_1, data={'key': 'test_1'})
 except:
     print("error in test 3-1: could not post /upload to your web app")
     print("check the web app connection, IP, port, API endpoint path, etc.")
-    test_3_flag_1 = False 
+    test_3_flag_1 = False
 
 if test_3_flag_1:
-    try: 
+    try:
         jsonResponse = response.json()
     except:
         print("error in test 3-1: your response cannot be represented in JSON format")
@@ -136,21 +136,21 @@ if test_3_flag_1:
         print("")
 
 try:
-    file_2 = {'file': open(work_dir+'/images/'+filenames[1],'rb')}
+    file_2 = {'file': open(work_dir + '/images/' + filenames[1], 'rb')}
 except:
     print("script failure: unable to open the image file. Please contact TA at wenjun.qiu@mail.utoronto.ca")
 
 test_3_flag_2 = True
 try:
-    response = requests.post(url+"/upload", files=file_2,
-                       data={'key': 'test_2'})
+    response = requests.post(url + "/upload", files=file_2,
+                             data={'key': 'test_2'})
 except:
     print("error in test 3-2: could not post /upload to your web app")
     print("check the web app connection, IP, port, API endpoint path, etc.")
-    test_3_flag_2 = False 
+    test_3_flag_2 = False
 
 if test_3_flag_2:
-    try: 
+    try:
         jsonResponse = response.json()
     except:
         print("error in test 3-2: your response cannot be represented in JSON format")
@@ -172,26 +172,24 @@ if test_3_flag_2:
         print('error in test 3-2: access failure on ["success"]/["key"] of the post response')
         print("")
 
-
-
-# test 4: retrieval 
+# test 4: retrieval
 print("--------------------------------------------------------------------")
-print("test 4: retrieve 1 image")    
+print("test 4: retrieve 1 image")
 
 test_4_flag = True
 try:
-    response = requests.post(url+"/key/test_1")
+    response = requests.post(url + "/key/test_1")
 except:
     print("error in test 4: could not post /key/test_1 to your web app")
     print("check the web app connection, IP, port, API endpoint path, etc.")
-    test_4_flag = False 
+    test_4_flag = False
 
-if test_4_flag: 
-    try: 
+if test_4_flag:
+    try:
         jsonResponse = response.json()
     except:
         print("error in test 4: your response cannot be represented in JSON format")
-    try: 
+    try:
         if jsonResponse["success"] == "true" and jsonResponse["key"] == "test_1" and jsonResponse["content"] != None:
             score += 1
         else:
@@ -208,21 +206,21 @@ if test_4_flag:
         print('error in test 4: access failure on ["success"]/["key"]/["content"] of the post response')
         print("")
 
-
 # test 5: configure cache settings
 print("--------------------------------------------------------------------")
-print("test 5: configure the cache (manual mode)")  
+print("test 5: configure the cache (manual mode)")
 
 test_5_flag_1 = True
 try:
-    response = requests.post(url+'/configure_cache', data={'mode': 'manual', 'numNodes': 2, 'cacheSize': 3, 'policy': 'RR'})
+    response = requests.post(url + '/configure_cache',
+                             data={'mode': 'manual', 'numNodes': 2, 'cacheSize': 3, 'policy': 'RR'})
 except:
     print("error in test 5: could not post /configure_cache to your web app")
     print("check the web app connection, IP, port, API endpoint path, etc.")
-    test_5_flag_1 = False 
+    test_5_flag_1 = False
 
 if test_5_flag_1:
-    try: 
+    try:
         jsonResponse = response.json()
     except:
         print("error in test 5: your response cannot be represented in JSON format.")
@@ -230,7 +228,7 @@ if test_5_flag_1:
     try:
         if jsonResponse["success"] == "true" and jsonResponse["mode"] == "manual" \
                 and jsonResponse["numNodes"] == 2 and jsonResponse["cacheSize"] == 3 \
-                and jsonResponse["policy"] == "RR" :
+                and jsonResponse["policy"] == "RR":
             score += 1
         else:
 
@@ -246,29 +244,27 @@ if test_5_flag_1:
             print(jsonResponse)
             print("")
     except:
-        print("error in test 5: access failure on ['success']/['mode']/['numNodes']/['cacheSize']/['policy'] of the post response.")
+        print(
+            "error in test 5: access failure on ['success']/['mode']/['numNodes']/['cacheSize']/['policy'] of the post response.")
         print("")
-    
-    
 
 # test 6: get number of nodes
 print("--------------------------------------------------------------------")
-print("test 6: get number of nodes")  
-
+print("test 6: get number of nodes")
 
 test_6_flag_1 = True
 try:
-    response = requests.post(url+'/getNumNodes')
+    response = requests.post(url + '/getNumNodes')
 except:
     print("error in test 6: could not post /getNumNodes to your web app")
     print("check the web app connection, IP, port, API endpoint path, etc.")
-    test_6_flag_1 = False 
+    test_6_flag_1 = False
 
 if test_6_flag_1:
-    try: 
+    try:
         jsonResponse = response.json()
     except:
-        print("error in test 6: your response cannot be represented in JSON format.")     
+        print("error in test 6: your response cannot be represented in JSON format.")
     try:
         if jsonResponse["success"] == "true" and jsonResponse["numNodes"] == 2:
             score += 1
@@ -284,6 +280,43 @@ if test_6_flag_1:
     except:
         print("error in test 6: access failure on ['success']/['numNodes'] of the post response.")
         print("")
-       
+
+
+# test 7: get miss rate
 print("--------------------------------------------------------------------")
-print("tester total: {}/7".format(score))    
+print("test 7: get miss rate")
+
+test_7_flag_1 = True
+try:
+    response = requests.post(url + "/getRate", data={'rate': 'miss'})
+except:
+    print("error in test 7: could not post /getRate to your web app")
+    print("check the web app connection, IP, port, API endpoint path, etc.")
+    test_7_flag_1 = False
+
+if test_7_flag_1:
+    try:
+        jsonResponse = response.json()
+    except:
+        print("error in test 7: your response cannot be represented in JSON format.")
+    try:
+        if jsonResponse["success"] == "true" and jsonResponse["rate"] == "miss":
+            score += 1
+            print("Endpoint passes, but you should also check that your 'value' field returns the miss rate for the "
+                  "last 1 minute.")
+        else:
+            print("""error in test 7: /getRate operation should return 
+                {
+                   "success": "true",
+                    "rate": "miss",
+                    "value": miss rate for the last 1 minute (as an integer)
+                }""")
+            print("your response: ")
+            print(jsonResponse)
+            print("")
+    except:
+        print("error in test 7: access failure on ['success']/['getRate'] of the post response.")
+        print("")
+
+print("--------------------------------------------------------------------")
+print("tester total: {}/8".format(score))
