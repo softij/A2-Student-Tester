@@ -228,9 +228,9 @@ if test_5_flag_1:
         print("error in test 5: your response cannot be represented in JSON format.")
 
     try:
-        if jsonResponse["success"] == "true" and jsonResponse["mode"] == "manual" 
-        and jsonResponse["numNodes"] == 2 and jsonResponse["cacheSize"] == 3
-        and jsonResponse["policy"] == "RR" :
+        if jsonResponse["success"] == "true" and jsonResponse["mode"] == "manual" \
+                and jsonResponse["numNodes"] == 2 and jsonResponse["cacheSize"] == 3 \
+                and jsonResponse["policy"] == "RR" :
             score += 1
         else:
 
@@ -246,7 +246,7 @@ if test_5_flag_1:
             print(jsonResponse)
             print("")
     except:
-        print("error in test 5: access failure on ["success"]/["mode"]/["numNodes"]/["cacheSize"]/["policy"] of the post response.")
+        print("error in test 5: access failure on ['success']/['mode']/['numNodes']/['cacheSize']/['policy'] of the post response.")
         print("")
     
     
@@ -282,7 +282,7 @@ if test_6_flag_1:
             print(jsonResponse)
             print("")
     except:
-        print("error in test 6: access failure on ["success"]/["numNodes"] of the post response.")
+        print("error in test 6: access failure on ['success']/['numNodes'] of the post response.")
         print("")
        
 print("--------------------------------------------------------------------")
