@@ -213,7 +213,7 @@ print("test 5: configure the cache (manual mode)")
 test_5_flag_1 = True
 try:
     response = requests.post(url + '/configure_cache',
-                             data={'mode': 'manual', 'numNodes': 2, 'cacheSize': 3, 'policy': 'RR'})
+                             params={'mode': 'manual', 'numNodes': 2, 'cacheSize': 3, 'policy': 'RR'})
 except:
     print("error in test 5: could not post /configure_cache to your web app")
     print("check the web app connection, IP, port, API endpoint path, etc.")
@@ -288,7 +288,7 @@ print("test 7: get miss rate")
 
 test_7_flag_1 = True
 try:
-    response = requests.post(url + "/getRate", data={'rate': 'miss'})
+    response = requests.post(url + "/getRate", params={'rate': 'miss'})
 except:
     print("error in test 7: could not post /getRate to your web app")
     print("check the web app connection, IP, port, API endpoint path, etc.")
