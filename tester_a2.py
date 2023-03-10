@@ -309,7 +309,7 @@ if test_7_flag_1:
                 {
                    "success": "true",
                     "rate": "miss",
-                    "value": miss rate for the last 1 minute (as an integer)
+                    "value": miss rate for the last 1 minute (as float)
                 }""")
             print("your response: ")
             print(jsonResponse)
